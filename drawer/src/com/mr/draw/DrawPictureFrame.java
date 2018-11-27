@@ -2,9 +2,7 @@ package com.mr.draw;
 
 import javax.swing.*;
 import java.awt.*;
-import java.awt.event.MouseAdapter;
-import java.awt.event.MouseEvent;
-import java.awt.event.MouseMotionAdapter;
+import java.awt.event.*;
 import java.awt.image.BufferedImage;
 
 public class DrawPictureFrame extends JFrame {
@@ -79,8 +77,16 @@ public class DrawPictureFrame extends JFrame {
         strokeGroup.add(strokeButton3);
         toolBar.addSeparator();
 
-        
+        backgroundButton = new JButton("BackgroundColor");
+        toolBar.add(backgroundButton);
+        foregroundButton = new JButton("ForegroundColor");
+        toolBar.add(foregroundButton);
+        toolBar.addSeparator();
 
+        clearButton = new JButton("Clean");
+        toolBar.add(clearButton);
+        eraserButton = new JButton("Eraser");
+        toolBar.add(eraserButton);
     }
 
     /**鼠标画笔操作**/
@@ -108,6 +114,57 @@ public class DrawPictureFrame extends JFrame {
             public void mouseReleased(final  MouseEvent arg0){
                 x = -1;
                 y = -1;
+            }
+        });
+
+        //画笔粗细调整操作
+        //BasicStroke()类， 实现Stroke接口， 通过不同构造方法创建属性不同的画笔对象
+        strokeButton1.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent arg0) {
+                BasicStroke bs = new BasicStroke(1, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+                g.setStroke(bs);
+            }
+        });
+        strokeButton2.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent arg0) {
+                BasicStroke bs = new BasicStroke(2, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+                g.setStroke(bs);
+            }
+        });
+        strokeButton3.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent arg0) {
+                BasicStroke bs = new BasicStroke(4, BasicStroke.CAP_BUTT, BasicStroke.JOIN_MITER);
+                g.setStroke(bs);
+            }
+        });
+
+        backgroundButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                //JColorChooser()类方法，DrawPictureFrame.this父窗体，默认颜色CYAN
+                Color bgColor = JColorChooser.showDialog(DrawPictureFrame.this,
+                                                    "ColorChoose", Color.CYAN);
+                if (bgColor != null){
+                    backgroundColor = bgColor;
+                }
+                //JFrame.setBackground
+                backgroundButton.setBackground(backgroundColor);//使按钮也变色
+                g.setColor(backgroundColor);//背景颜色用画笔填满，填满后恢复成画笔颜色
+                g.fillRect(0, 0, 570, 390);
+                g.setColor(foreColor);
+                canvas.repaint();//Canvas.repaint方法， 更新画布
+            }
+        });
+
+        foregroundButton.addActionListener(new ActionListener() {
+            public void actionPerformed(ActionEvent e) {
+                Color fColor = JColorChooser.showDialog(DrawPictureFrame.this,
+                        "ColorChoose", Color.CYAN);
+                if (fColor != null){
+                    foreColor = fColor;
+                }
+                //setForeground使字体变色，setBackground使按钮背景变色
+                foregroundButton.setForeground(foreColor);
+                g.setColor(foreColor);
             }
         });
     }
