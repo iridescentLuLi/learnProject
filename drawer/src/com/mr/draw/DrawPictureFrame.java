@@ -32,6 +32,8 @@ public class DrawPictureFrame extends JFrame {
     private JButton clearButton;
     private JButton saveButton;
     private JButton shapeButton;
+    private JButton shuiyinButton;
+    private String shuiyin = "";
 
 
     /**构造方法**/
@@ -87,6 +89,9 @@ public class DrawPictureFrame extends JFrame {
         toolBar.add(clearButton);
         eraserButton = new JButton("Eraser");
         toolBar.add(eraserButton);
+
+        shuiyinButton = new JButton("shuiyin");
+        toolBar.add(shuiyinButton);
     }
 
     /**鼠标画笔操作**/
@@ -95,6 +100,7 @@ public class DrawPictureFrame extends JFrame {
         canvas.addMouseMotionListener(new MouseMotionAdapter() {
             //鼠标按键，拖拽
             public void mouseDragged(final MouseEvent e){
+                //如果rubber为true表示正在使用橡皮，设置为方块状的画笔，颜色为背景色
                 if (x > 0 && y > 0){
                     if (rubber){
                         g.setColor(backgroundColor);
@@ -139,7 +145,7 @@ public class DrawPictureFrame extends JFrame {
         });
 
         backgroundButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 //JColorChooser()类方法，DrawPictureFrame.this父窗体，默认颜色CYAN
                 Color bgColor = JColorChooser.showDialog(DrawPictureFrame.this,
                                                     "ColorChoose", Color.CYAN);
@@ -156,7 +162,7 @@ public class DrawPictureFrame extends JFrame {
         });
 
         foregroundButton.addActionListener(new ActionListener() {
-            public void actionPerformed(ActionEvent e) {
+            public void actionPerformed(final ActionEvent e) {
                 Color fColor = JColorChooser.showDialog(DrawPictureFrame.this,
                         "ColorChoose", Color.CYAN);
                 if (fColor != null){
@@ -167,7 +173,37 @@ public class DrawPictureFrame extends JFrame {
                 g.setColor(foreColor);
             }
         });
+
+        clearButton.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                g.setColor(backgroundColor);
+                g.fillRect(0, 0, 570, 390);
+                g.setColor(foreColor);
+                canvas.repaint();
+            }
+        });
+
+        eraserButton.addActionListener(new ActionListener() {
+            public void actionPerformed(final ActionEvent e) {
+                if (eraserButton.getText().equals( "Eraser")){
+                    rubber = true;
+                    eraserButton.setText("Pen");
+                }else {
+                    rubber = false;
+                    eraserButton.setText("Eraser");
+                    g.setColor(foreColor);
+                }
+            }
+        });
+
+//        saveButton.addActionListener(new ActionListener() {
+//            @Override
+//            public void actionPerformed(ActionEvent e) {
+//
+//            }
+//        });
     }
+
 
     public static void main(String[] args){
         DrawPictureFrame frame = new DrawPictureFrame();
